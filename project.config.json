@@ -47,12 +47,20 @@
 					"id": -1,
 					"name": "pages/user/user",
 					"pathName": "pages/user/user",
+					"query": "",
 					"scene": null
 				},
 				{
 					"id": -1,
 					"name": "pages/register/register",
 					"pathName": "pages/register/register",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/appointment/appointment",
+					"pathName": "pages/appointment/appointment",
 					"scene": null
 				}
 			]
