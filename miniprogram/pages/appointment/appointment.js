@@ -31,27 +31,44 @@ Page({
     Tab2: ["上午", "中午", "下午"],
     TabCur2: 0,
 
-    labName: '',   //实验室集合
-    date: '',     //当前选中的日期
-    apt:'',       //预约的设备列表 boolean数组
+    labName: '', //实验室集合
+    date: '', //当前选中的日期
+    apt: '', //预约的设备列表 boolean数组
 
+    showBtn: false, //是否显示预约按钮，等获取数据后再显示
+    showText: false, //是否弹出预约理由框
+
+    btnIndex: '',   //当前点击的设备的下标
+    btnEquipment: '',  //当前点击的设备的名称
   },
 
   /**
    * 进来后首先触发
-   * 获取实验室所有设备数据
+   * 获取实验室所有设备数据和预约列表
    */
-  onLoad: function(options) {
+  onLoad: function (options) {
     const _this = this; //需转化，不然在api内this会失效
     db.collection('lab').get({
-      success: function(res) {
+      success: res => {
         _this.setData({
           labName: res.data,
         })
+        // 下面不能用new Date().toLocaleDateString()获取日期
+        // 因为这样获取的日期在预览和真机调试中格式不一样，会有bug
+        let d = new Date();
+        let month = d.getMonth() + 1;
+        if (parseInt(month) < 10) {
+          month = "0" + month;
+        }
+        let day = d.getDate();
+        if (parseInt(day) < 10) {
+          day = "0" + day;
+        }
+        _this.data.date = d.getFullYear() + "/" + month + "/" + day;
+        _this.changeTime();
       }
     });
-    this.data.date = new Date().toLocaleDateString();
-    this.changeTime();
+    console.log(app.globalData.openid);
   },
 
   /**
@@ -81,7 +98,15 @@ Page({
    */
   afterTapDay(e) {
     console.log('afterTapDay', e.detail); // => { currentSelect: {}, allSelectedDays: [] }
-    const date = e.detail.year + "/" + e.detail.month + "/" + e.detail.day;
+    let month = e.detail.month;
+    if (parseInt(month) < 10) {
+      month = "0" + month;
+    }
+    let day = e.detail.day;
+    if (parseInt(day) < 10) {
+      day = "0" + day;
+    }
+    const date = e.detail.year + "/" + month + "/" + day;
     this.setData({
       date: date,
     })
@@ -103,7 +128,6 @@ Page({
    */
   whenChangeMonth(e) {
     console.log('whenChangeMonth', e.detail);
-    // => { current: { month: 3, ... }, next: { month: 4, ... }}
   },
 
   /**
@@ -112,14 +136,6 @@ Page({
    */
   whenChangeWeek(e) {
     console.log('whenChangeWeek', e.detail);
-  },
-
-  /**
-   * 日期点击事件（此事件会完全接管点击事件），需自定义配置 takeoverTap 值为真才能生效
-   * currentSelect 当前点击的日期
-   */
-  onTapDay(e) {
-    console.log('onTapDay', e.detail); // => { year: 2019, month: 12, day: 3, ...}
   },
 
   /**
@@ -137,20 +153,19 @@ Page({
   changeTime() {
     const _this = this;
     //获取当前日期的00:00:00点
-    const today = new Date(Date.parse(new Date().toLocaleDateString()));
     let apt = [];
     db.collection('appointment').where({
       labName: _this.data.Tab[_this.data.TabCur],
       time: _this.data.Tab2[_this.data.TabCur2],
       date: _this.data.date,
     }).get({
-      success: function(res) {
+      success: function (res) {
         console.log("预约记录：", res.data);
-       //筛选哪些设备被预约了
+        //筛选哪些设备被预约了
         for (let i = 0; i < _this.data.labName[_this.data.TabCur].equipment.length; i++) {
           let flag = 0;
           for (let j = 0; j < res.data.length; j++) {
-       //如果设备列表在预约表中有记录，则apt为true
+            //如果设备列表在预约表中有记录，则apt为true
             if (_this.data.labName[_this.data.TabCur].equipment[i] == res.data[j].equipment) {
               apt.push(true);
               flag = 1;
@@ -162,18 +177,113 @@ Page({
           }
         }
         _this.setData({
-          apt:apt
+          apt: apt,
+          showBtn: true
         })
         console.log("预约列表", apt)
       }
     })
-
   },
 
   /**
-   * 预约
+   * 点击预约按钮后保存数据，弹出预约框
    */
-  addApointment(e) {
-    console.log("你点击了预约", e.currentTarget.dataset.index)
-  }
+  btnApointment(e) {
+    const index = e.currentTarget.dataset.index;
+    const equipment = this.data.labName[this.data.TabCur].equipment[index];
+    this.setData({
+      showText: true, //弹出预约理由框
+      btnEquipment: equipment,
+      btnIndex: index,
+    })
+  },
+
+  /**
+   * 点击预约框的确定后提交数据到数据库
+   * @param {*} e 
+   */
+  submitAppointment(e) {
+    const _this = this;
+    let reason = e.detail.value.reason;
+    if (reason == '') {
+      reason = "无";
+    }
+    const equipment = this.data.btnEquipment;
+    const index = this.data.btnIndex;
+    const getCheck = this.checkSubmit(index);
+    getCheck.then(check => { //使用promise
+      if (check) { //验证是否可预约
+        db.collection('appointment').add({
+          data: {
+            date: _this.data.date,
+            equipment: equipment,
+            labName: _this.data.Tab[_this.data.TabCur],
+            time: _this.data.Tab2[_this.data.TabCur2],
+            reason: reason,
+          },
+          success: res => {
+            console.log(res)
+            _this.setData({
+              ['apt[' + index + ']']: true, //点击‘预约’后设为不可点击，防止重复提交
+            })
+            wx.showToast({
+              title: '预约成功！',
+              icon: 'success',
+              duration: 1500
+            })
+          },
+          fail: res => {
+            wx.showToast({
+              title: '预约失败，请稍后再试！',
+              icon: 'none',
+              duration: 1500
+            })
+          }
+        })
+      } else {
+        wx.showToast({
+          title: '预约失败，请刷新后再试！',
+          icon: 'none',
+          duration: 1500
+        })
+      }
+    })
+    this.hideModal();
+  },
+
+  /**
+   * 提交预约之前检查该时间点是否有人已经预约了
+   * 防止没刷新，导致多人预约同一时间,通过返回true，否则false
+   */
+  checkSubmit(index) {
+    const _this = this;
+    const equipment = this.data.labName[this.data.TabCur].equipment[index];
+    return new Promise(function (resolve, reject) {
+      db.collection('appointment').where({
+        date: _this.data.date,
+        equipment: equipment,
+        labName: _this.data.Tab[_this.data.TabCur],
+        time: _this.data.Tab2[_this.data.TabCur2],
+      })
+        .get({
+          success: res => {
+            if (res.data.length == 0) {
+              resolve(true);
+            } else {
+              resolve(false);
+            }
+          }
+        })
+    })
+  },
+
+  /**
+   * 在预约理由框中点击取消
+   */
+  hideModal(e) {
+    this.setData({
+      showText: false,
+      inputReason: '',
+    })
+  },
 })
