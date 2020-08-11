@@ -22,9 +22,12 @@
 <!-- 设备 -->
 <view class="cu-list menu sm-border card-menu margin-top">
 	<view class="cu-item  {{menuArrow?'arrow':''}}" wx:for="{{labName[TabCur].equipment}}" wx:for-item="item" wx:key="index" wx:for-index="index">
-		<view class="content">
+		<view class="content" style="display:flex">
 			<text class="cuIcon-title {{apt[index]?'text-orange':'text-green'}}"></text>
 			<text class="text-grey">{{item}}</text>
+			<view class="text-gray" style="margin-left:200rpx;font-size:12px">
+				<view>{{applicant[index]}}</view>
+			</view>
 		</view>
 		<view class="action" hidden="{{!showBtn}}">
 			<button class="cu-btn round bg-green shadow" size="mini" style="font-weight:400;width:150rpx" bindtap="btnApointment" data-index="{{index}}" disabled="{{apt[index]}}">预约</button>

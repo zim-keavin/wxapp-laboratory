@@ -31,9 +31,12 @@ Page({
     Tab2: ["上午", "中午", "下午"],
     TabCur2: 0,
 
+    userInfo: '',
+
     labName: '', //实验室集合
     date: '', //当前选中的日期
     apt: '', //预约的设备列表 boolean数组
+    applicant:'', //预约的申请人列表
 
     showBtn: false, //是否显示预约按钮，等获取数据后再显示
     showText: false, //是否弹出预约理由框
@@ -68,7 +71,7 @@ Page({
         _this.changeTime();
       }
     });
-    console.log(app.globalData.openid);
+    this.data.userInfo = app.globalData.userInfo;
   },
 
   /**
@@ -154,6 +157,7 @@ Page({
     const _this = this;
     //获取当前日期的00:00:00点
     let apt = [];
+    let applicant = [];
     db.collection('appointment').where({
       labName: _this.data.Tab[_this.data.TabCur],
       time: _this.data.Tab2[_this.data.TabCur2],
@@ -168,19 +172,23 @@ Page({
             //如果设备列表在预约表中有记录，则apt为true
             if (_this.data.labName[_this.data.TabCur].equipment[i] == res.data[j].equipment) {
               apt.push(true);
+              applicant.push(res.data[j].userName)
               flag = 1;
               break;
             }
           }
           if (flag == 0) {
             apt.push(false);
+            applicant.push('')
           }
         }
         _this.setData({
           apt: apt,
-          showBtn: true
+          showBtn: true,
+          applicant:applicant,
         })
         console.log("预约列表", apt)
+        console.log("applicant", applicant)
       }
     })
   },
@@ -219,6 +227,7 @@ Page({
             equipment: equipment,
             labName: _this.data.Tab[_this.data.TabCur],
             time: _this.data.Tab2[_this.data.TabCur2],
+            userName: app.globalData.userInfo.userName,
             reason: reason,
           },
           success: res => {
