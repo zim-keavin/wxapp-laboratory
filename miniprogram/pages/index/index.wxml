@@ -1,5 +1,2 @@
 <!--pages/index/index.wxml-->
-<view>
-  <!-- <calendar calendarConfig="{{calendarConfig}}" bind:onTapDay="onTapDay" bind:afterTapDay="afterTapDay" bind:onSwipe="onSwipe" bind:whenChangeWeek="whenChangeWeek" bind:whenChangeMonth="whenChangeMonth" bind:afterCalendarRender="afterCalendarRender"></calendar> -->
-  
-</view>
+<video src="cloud://sys-jjnec.7379-sys-jjnec-1301473917/fda7a3cea81c6775932366246f8ef02b.mp4"></video>

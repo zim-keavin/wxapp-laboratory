@@ -25,7 +25,7 @@
 			"outputPath": ""
 		},
 		"useIsolateContext": true,
-		"useCompilerModule": true,
+		"useCompilerModule": false,
 		"userConfirmedUseCompilerModuleSwitch": false
 	},
 	"appid": "wxe7b27c291e10fc7f",
@@ -80,6 +80,13 @@
 					"id": -1,
 					"name": "pages/appointment/appointment",
 					"pathName": "pages/appointment/appointment",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/myAppointment/myAppointment",
+					"pathName": "pages/myAppointment/myAppointment",
 					"scene": null
 				}
 			]

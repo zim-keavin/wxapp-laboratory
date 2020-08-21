@@ -1,0 +1,62 @@
+<view wx:for='{{myAppointment}}' wx:key="index" wx:for-index="index">
+	<view style="margin:0rpx 20rpx 0rpx 20rpx">
+		<view class="cu-bar bg-white solid-bottom margin-top" style="border-radius:10rpx 10rpx 0rpx 0rpx">
+			<view class="action">
+				<text class="cuIcon-calendar text-olive "></text>{{item.date}} {{item.time}}<text class="cuIcon-tagfill text-olive "></text>{{item.labName}}
+			</view>
+			<view class="action" bindtap="showCancelModal" data-index="{{index}}">
+				<text class="text-red">取消预约</text>
+			</view>
+		</view>
+
+		<view class="cu-list menu {{menuBorder?'sm-border':''}} {{menuCard?'card-menu margin-top':''}}">
+			<view class="cu-item {{menuArrow?'arrow':''}}">
+				<view class="content">
+					<view>
+						<text class="cuIcon-lock text-olive margin-right-xs"></text>
+						<text class="text-grey text-df">预约设备</text>
+					</view>
+				</view>
+				<view class="action">
+					<text class="text-grey text-df">{{item.equipment}}</text>
+				</view>
+			</view>
+
+			<view class="cu-item" style="border-radius:0rpx 0rpx 10rpx 10rpx">
+				<view class="content padding-tb-sm">
+					<view>
+						<text class="cuIcon-edit text-olive margin-right-xs"></text>
+						<text class="text-grey text-df"> 预约理由</text></view>
+					<view class="text-gray text-sm">
+						<text class="cuIcon-infofill margin-right-xs"></text>{{item.reason}}</view>
+				</view>
+			</view>
+		</view>
+	</view>
+</view>
+
+<view style="margin:50rpx 0 40rpx 0;width:100%;display:flex;justify-content:center">
+	<text class="text-df text-orange" style="text-decoration:underline;" bindtap="loadMore">点击加载更多</text>
+</view>
+
+
+<view class="cu-modal {{showCancelModal?'show':''}}">
+	<view class="cu-dialog">
+		<view class="cu-bar bg-white justify-end">
+			<view class="content">取消预约</view>
+			<view class="action" bindtap="hideCancelModal">
+				<text class="cuIcon-close text-red"></text>
+			</view>
+		</view>
+		<view class="padding-xl">
+			<text class="cuIcon-warnfill text-red"></text>你确定要取消预约吗？
+		</view>
+		<view class="cu-bar bg-white justify-end">
+			<view class="action">
+				<button class="cu-btn line-green text-green" bindtap="hideCancelModal" size="mini" style="font-weight:400;width:150rpx">取消</button>
+				<button class="cu-btn bg-red margin-left" bindtap="cancelAppointment" size="mini" style="font-weight:400;width:150rpx">确定</button>
+
+			</view>
+		</view>
+	</view>
+</view>

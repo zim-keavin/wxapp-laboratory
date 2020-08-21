@@ -7,19 +7,14 @@ Page({
     userInfo: {},
     logged: false,
     takeSession: false,
-    requestResult: ''
+    requestResult: '',
+
+    isRegistered:false,
+    userinformation:'',
   },
 
   onLoad: function() {
-    if (!wx.cloud) {
-      wx.redirectTo({
-        url: '../chooseLib/chooseLib',
-      })
-      return
-    }
-
-    // 获取用户信息
-    wx.getSetting({
+    wx.getSetting({     // 获取用户信息
       success: res => {
         if (res.authSetting['scope.userInfo']) {
           // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
@@ -34,6 +29,22 @@ Page({
         }
       }
     })
+    console.log(app.globalData.isRegistered)
+    if (app.globalData.isRegistered) {
+      console.log("再次检查")
+      this.setData({
+        isRegistered:app.globalData.isRegistered,
+        userinformation:app.globalData.userInfo
+      })
+    }
+  },
+
+  onShow: function () {
+    app.isRegistered()
+    this.setData({
+      isRegistered:app.globalData.isRegistered,
+      userinformation:app.globalData.userInfo
+    })
   },
 
   onGetUserInfo: function(e) {
@@ -44,14 +55,29 @@ Page({
         userInfo: e.detail.userInfo
       })
     }
+    wx.redirectTo({
+      url:'../register/register'
+    })
   },
 
   register:function(){
-    wx.navigateTo({
+    wx.redirectTo({
       url:'../register/register'
     })
-  }
+  },
 
+  personalInfo:function(){
+    wx.navigateTo({
+      url:'../personalInfo/personalInfo',
+    })
+  },
 
+  myAppointment(){
+    wx.navigateTo({
+      url:'../myAppointment/myAppointment',
+    })
+  },
+
+ 
 
 })

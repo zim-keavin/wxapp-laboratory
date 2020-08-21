@@ -36,7 +36,7 @@ Page({
     labName: '', //实验室集合
     date: '', //当前选中的日期
     apt: '', //预约的设备列表 boolean数组
-    applicant:'', //预约的申请人列表
+    applicant: '', //预约的申请人列表
 
     showBtn: false, //是否显示预约按钮，等获取数据后再显示
     showText: false, //是否弹出预约理由框
@@ -67,7 +67,7 @@ Page({
         if (parseInt(day) < 10) {
           day = "0" + day;
         }
-        _this.data.date = d.getFullYear() + "/" + month + "/" + day;
+        _this.data.date = d.getFullYear() + "-" + month + "-" + day;
         _this.changeTime();
       }
     });
@@ -109,7 +109,7 @@ Page({
     if (parseInt(day) < 10) {
       day = "0" + day;
     }
-    const date = e.detail.year + "/" + month + "/" + day;
+    const date = e.detail.year + "-" + month + "-" + day;
     this.setData({
       date: date,
     })
@@ -185,7 +185,7 @@ Page({
         _this.setData({
           apt: apt,
           showBtn: true,
-          applicant:applicant,
+          applicant: applicant,
         })
         console.log("预约列表", apt)
         console.log("applicant", applicant)
@@ -216,6 +216,8 @@ Page({
     if (reason == '') {
       reason = "无";
     }
+    // let now = new Date().toLocaleString();        //获取当前提交的日期与时间
+    // console.log(now)
     const equipment = this.data.btnEquipment;
     const index = this.data.btnIndex;
     const getCheck = this.checkSubmit(index);
@@ -229,6 +231,7 @@ Page({
             time: _this.data.Tab2[_this.data.TabCur2],
             userName: app.globalData.userInfo.userName,
             reason: reason,
+            submissionTime: new Date(),
           },
           success: res => {
             console.log(res)

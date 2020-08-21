@@ -1,18 +1,37 @@
-<!--index.wxml-->
-<view class="container">
+<view>
+	<image class='userinfo' src="../../images/bg.jpg"></image>
+	<view class="container">
+		<view class='userinfo-avatar'>
+			<open-data type="userAvatarUrl" lang="zh_CN"></open-data>
+		</view>
+		<button class="cu-btn round sm bg-green" style="width:180rpx;height:60rpx;font-size:28rpx;margin-top:30rpx;" wx:if="{{!isRegistered}}" open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="onGetUserInfo">点击注册</button>
+		<view class='userinfo-nickname' wx:else>
+			{{userinformation.userName}}
+		</view>
+	</view>
+</view>
+<!-- 个人信息等 -->
+<view class="cu-list menu {{menuBorder? 'sm-border': ''}} {{menuCard? 'card-menu margin-top': ''}} " style="margin-top:25rpx">
+	<view class="cu-item arrow " data-name="userInfo" bindtap="personalInfo">
+		<view class="content ">
+			<text class="cuIcon-profile text-grey "></text>
+			<text class="text-grey ">个人信息</text>
+		</view>
+	</view>
 
-  <!-- 用户注册 -->
-  <view class="userinfo">
-    <button 
-      open-type="getUserInfo" 
-      bindgetuserinfo="onGetUserInfo"
-      class="userinfo-avatar"
-      style="background-image: url({{avatarUrl}})"
-      size="default"
-    ></button>
-    <view class="userinfo-nickname-wrapper">
-      <button class="userinfo-nickname" bindtap="register">点击注册账户</button>
-    </view>
-  </view>
+	<view class="cu-item arrow " data-name="userInfo" bindtap="myAppointment">
+		<view class="content ">
+			<text class="cuIcon-calendar text-grey "></text>
+			<text class="text-grey ">我的预约</text>
+		</view>
+	</view>
 
+	<view class="cu-item arrow ">
+		<button open-type="contact" class='content' hover-class='none' style="font-weight:400 ">
+			<view class="content ">
+				<text class="cuIcon-mobile text-grey "></text>
+				<text class="text-grey ">联系管理员</text>
+			</view>
+		</button>
+	</view>
 </view>
