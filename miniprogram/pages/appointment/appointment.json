@@ -1,5 +1,6 @@
 {
   "usingComponents": {
     "calendar": "../../components/calendar/index"
-  }
+  },
+  "enablePullDownRefresh": true
 }

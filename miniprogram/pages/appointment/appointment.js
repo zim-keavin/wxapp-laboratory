@@ -298,4 +298,14 @@ Page({
       inputReason: '',
     })
   },
+
+  onPullDownRefresh: function() {
+    wx.showNavigationBarLoading() //在标题栏中显示加载
+    let _this = this
+    setTimeout(function() { //模拟网络加载，强化体验
+      _this.changeTime()
+      wx.hideNavigationBarLoading() //完成停止加载
+      wx.stopPullDownRefresh() //停止下拉刷新
+    }, 1000)
+  },
 })

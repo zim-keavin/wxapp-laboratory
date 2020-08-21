@@ -1,2 +1,32 @@
-<!--pages/index/index.wxml-->
-<video src="cloud://sys-jjnec.7379-sys-jjnec-1301473917/fda7a3cea81c6775932366246f8ef02b.mp4"></video>
+	<form bindsubmit='search'>
+		<view class="cu-bar search bg-white">
+			<view class="search-form round">
+				<text class="cuIcon-search"></text>
+				<input type="text" placeholder="输入名字搜索" confirm-type="搜素" name="search"></input>
+			</view>
+			<view class="action">
+				<button class="cu-btn bg-green shadow-blur round" size="mini" style="font-weight:400;width:125rpx" form-type='submit'>搜索</button>
+			</view>
+		</view>
+	</form>
+
+	<view wx:for='{{list}}' wx:key="index" wx:for-index="index">
+		<view class="cu-timeline">
+			<!-- <view class="cu-time">06-17</view> -->
+			<view class="cu-item text-{{color[index%5]}}">
+				<view class="content shadow-blur bg-{{color[index%5]}} ">
+					<text>{{item.userName}} 预约了</text> <text> {{item.date}} </text> <text> {{item.time}} </text>
+					<text> {{item.labName}} </text> 的 <text> {{item.equipment}} </text>
+					<text>理由：{{item.reason}}</text>
+				</view>
+			</view>
+		</view>
+	</view>
+
+	<view style="margin:30rpx 0 40rpx 0;width:100%;display:flex;justify-content:center" wx:if='{{list.length%10==0}}'>
+		<text class="text-df text-orange" style="text-decoration:underline;" bindtap="loadMore">点击加载更多</text>
+	</view>
+
+  <!-- <view class="cover"  catchtouchmove='maskTouchMove' wx:if="{{cover}}"></view> -->
+
+	

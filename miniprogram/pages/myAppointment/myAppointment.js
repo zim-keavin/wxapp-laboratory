@@ -12,12 +12,22 @@ Page({
     myAppointment: [],
     showCancelModal: false,   //是否显示取消模糊框
     cancelId: '',   //点击的取消预约的数组下标
+    today: '',  //小于今天的预约记录不可取消，作为历史预约保存
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    let d = new Date();           //获取今天的日期
+    let month = d.getMonth() + 1;
+    if (parseInt(month) < 10) {
+      month = "0" + month;
+    }
+    let day = d.getDate();
+    if (parseInt(day) < 10) {
+      day = "0" + day;
+    }
     const _this = this;
     db.collection('appointment').where({
       _openid: app.globalData.openid
@@ -25,7 +35,8 @@ Page({
       success: res => {
         console.log(res)
         _this.setData({
-          myAppointment: res.data
+          myAppointment: res.data,
+          today: d.getFullYear() + "-" + month + "-" + day
         })
       }
     })
@@ -42,9 +53,18 @@ Page({
       .limit(5).orderBy('submissionTime', 'desc')
       .get({
         success: res => {
-          _this.setData({
-            myAppointment: [..._this.data.myAppointment, ...res.data], //合并数据
-          })
+          if (res.data.length == 0) {
+            wx.showToast({
+              title: '到底了！',
+              icon: 'none',
+              duration: 1500
+            })
+          } else {
+            _this.setData({
+              myAppointment: [..._this.data.myAppointment, ...res.data], //合并数据
+            })
+          }
+
         }
       })
   },

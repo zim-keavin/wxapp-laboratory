@@ -4,7 +4,7 @@
 			<view class="action">
 				<text class="cuIcon-calendar text-olive "></text>{{item.date}} {{item.time}}<text class="cuIcon-tagfill text-olive "></text>{{item.labName}}
 			</view>
-			<view class="action" bindtap="showCancelModal" data-index="{{index}}">
+			<view class="action" bindtap="showCancelModal" data-index="{{index}}" wx:if="{{item.date>today||item.date==today}}">
 				<text class="text-red">取消预约</text>
 			</view>
 		</view>
@@ -35,7 +35,8 @@
 	</view>
 </view>
 
-<view style="margin:50rpx 0 40rpx 0;width:100%;display:flex;justify-content:center">
+<view style="height:30rpx;width:100%"></view>
+<view style="margin:20rpx 0 40rpx 0;width:100%;display:flex;justify-content:center" wx:if='{{myAppointment.length%5==0||myAppointment.length<5}}'>
 	<text class="text-df text-orange" style="text-decoration:underline;" bindtap="loadMore">点击加载更多</text>
 </view>
 
@@ -55,7 +56,6 @@
 			<view class="action">
 				<button class="cu-btn line-green text-green" bindtap="hideCancelModal" size="mini" style="font-weight:400;width:150rpx">取消</button>
 				<button class="cu-btn bg-red margin-left" bindtap="cancelAppointment" size="mini" style="font-weight:400;width:150rpx">确定</button>
-
 			</view>
 		</view>
 	</view>
