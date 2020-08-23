@@ -16,27 +16,31 @@ Page({
    */
   onLoad: function (options) {
     const this_ = this
-    db.collection('user').where({
-      _openid: app.globalData.openid
-    }).get({
-      success: function (res) {
-        if (res.data.length > 0) {
-          this_.setData({
-            name: res.data[0].userName,
-            phone: res.data[0].phone
-          })
-        }else{
-          wx.showToast({
-            title: '请先注册！',
-            icon: 'none',
-            duration: 1500
-          })
-          wx.redirectTo({
-            url:'../register/register'
-          })
-        }
-      }
+    this.setData({
+      name: app.globalData.userInfo.userName,
+      phone: app.globalData.userInfo.phone
     })
+    // db.collection('user').where({
+    //   _openid: app.globalData.openid
+    // }).get({
+    //   success: function (res) {
+    //     if (res.data.length > 0) {
+    //       this_.setData({
+    //         name: res.data[0].userName,
+    //         phone: res.data[0].phone
+    //       })
+    //     }else{
+    //       wx.showToast({
+    //         title: '请先注册！',
+    //         icon: 'none',
+    //         duration: 1500
+    //       })
+    //       wx.redirectTo({
+    //         url:'../register/register'
+    //       })
+    //     }
+    //   }
+    // })
   },
 
   /**
@@ -60,13 +64,14 @@ Page({
       })
     } else
       db.collection('user').where({
-        _openid:app.globalData.openid
+        _openid: app.globalData.openid
       }).update({
         data: {
           userName: e.detail.value.name,
           phone: phone,
         },
         success: res => {
+          app.isRegistered();
           wx.showToast({
             duration: 1500,
             title: '修改成功',

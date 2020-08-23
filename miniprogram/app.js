@@ -15,7 +15,7 @@ App({
       })
     }
     this.globalData = {
-      
+      isRegistered:false,
     }
     /**
      * 打开小程序的时候首先获得用户openid

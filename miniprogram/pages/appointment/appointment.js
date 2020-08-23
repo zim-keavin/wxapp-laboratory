@@ -197,13 +197,20 @@ Page({
    * 点击预约按钮后保存数据，弹出预约框
    */
   btnApointment(e) {
-    const index = e.currentTarget.dataset.index;
-    const equipment = this.data.labName[this.data.TabCur].equipment[index];
-    this.setData({
-      showText: true, //弹出预约理由框
-      btnEquipment: equipment,
-      btnIndex: index,
-    })
+    if (!app.globalData.isRegistered) {
+      wx.redirectTo({
+        url: '../register/register',
+      })
+    } else {
+      const index = e.currentTarget.dataset.index;
+      const equipment = this.data.labName[this.data.TabCur].equipment[index];
+      this.setData({
+        showText: true, //弹出预约理由框
+        btnEquipment: equipment,
+        btnIndex: index,
+      })
+    }
+
   },
 
   /**
@@ -299,10 +306,10 @@ Page({
     })
   },
 
-  onPullDownRefresh: function() {
+  onPullDownRefresh: function () {
     wx.showNavigationBarLoading() //在标题栏中显示加载
     let _this = this
-    setTimeout(function() { //模拟网络加载，强化体验
+    setTimeout(function () { //模拟网络加载，强化体验
       _this.changeTime()
       wx.hideNavigationBarLoading() //完成停止加载
       wx.stopPullDownRefresh() //停止下拉刷新

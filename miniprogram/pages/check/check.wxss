@@ -1,3 +1,34 @@
-page{
+page {
   background-color: white;
+}
+
+.container {
+  height: 1000rpx;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.userinfo-avatar {
+  margin-top: 100rpx;
+  width: 180rpx;
+  height: 180rpx;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.userinfo-nickname {
+  margin-top: 30rpx;
+  font-size: 40rpx;
+  color: black;
+}
+
+.invite-code{
+  width: 250rpx;
+  height: 40rpx;
+  border-bottom:1rpx solid #f1f1f1
 }

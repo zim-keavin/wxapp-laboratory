@@ -1,2 +1,15 @@
-<!--pages/check/check.wxml-->
-<text>pages/check/check.wxml</text>
+<form bindsubmit='checkInviteCode'>
+	<view class="container">
+		<view class='userinfo-avatar'>
+			<open-data type="userAvatarUrl" lang="zh_CN"></open-data>
+		</view>
+		<view class='userinfo-nickname'>
+			<open-data type="userNickName" lang="zh_CN"></open-data>
+		</view>
+		<view style="margin-top:100rpx">
+			<input placeholder="请输入您的邀请码" class="invite-code" name="code"></input>
+		</view>
+		<view style="margin-top:10rpx;color:red;font-size:25rpx">{{warnText}}</view>
+		<button class="cu-btn round line-black button-hover" style="margin-top:200rpx;width:150rpx;front-weight:100;height:48rpx;font-size:27rpx" size="mini" form-type='submit'>提交</button>
+	</view>
+</form>
