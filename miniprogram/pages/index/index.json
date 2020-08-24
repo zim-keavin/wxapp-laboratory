@@ -2,5 +2,6 @@
   "usingComponents": {
     "calendar": "/components/calendar/index"
   },
-  "enablePullDownRefresh": true
+  "enablePullDownRefresh": true,
+  "navigationBarTitleText": "首页"
 }

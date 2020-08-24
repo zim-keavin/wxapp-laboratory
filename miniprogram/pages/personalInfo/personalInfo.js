@@ -15,32 +15,10 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    const this_ = this
     this.setData({
       name: app.globalData.userInfo.userName,
       phone: app.globalData.userInfo.phone
     })
-    // db.collection('user').where({
-    //   _openid: app.globalData.openid
-    // }).get({
-    //   success: function (res) {
-    //     if (res.data.length > 0) {
-    //       this_.setData({
-    //         name: res.data[0].userName,
-    //         phone: res.data[0].phone
-    //       })
-    //     }else{
-    //       wx.showToast({
-    //         title: '请先注册！',
-    //         icon: 'none',
-    //         duration: 1500
-    //       })
-    //       wx.redirectTo({
-    //         url:'../register/register'
-    //       })
-    //     }
-    //   }
-    // })
   },
 
   /**

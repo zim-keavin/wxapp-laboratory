@@ -10,7 +10,6 @@ Page({
    */
   data: {
     openid: '',
-    inviteCode: '',
     warnText: '',
     n: 3,
   },
@@ -32,14 +31,6 @@ Page({
       },
       fail: err => {
         console.error('[云函数] [login] 调用失败', err)
-      }
-    })
-    db.collection('check').where({
-      isInviteCode: _.eq(true)
-    }).get({
-      success: function (res) {
-        console.log(res)
-        _this.data.inviteCode = res.data[0].inviteCode
       }
     })
   },
@@ -66,20 +57,18 @@ Page({
   },
 
   isBlackList: function (openid) {
-    console.log(openid)
     const _this = this;
     db.collection('check').where({
       _openid: openid
     }).get({
       success: function (res) {
-        console.log(res)
         if (res.data.length == 0) {
-          db.collection('check').add({    //没有访问记录则创建访问记录
+          db.collection('check').add({    //没有访问记录则创建访问记录，并置n为3
             data: {
               n: 3
             },
             success: res => {
-              console.length(res)
+              console.log(res)
             }
           })
         } else {
@@ -107,57 +96,64 @@ Page({
         icon: 'none'
       });
     } else {
-      // wx.cloud.callFunction({
-      //   // 云函数名称
-      //   name: 'check',
-      //   data: {
-      //     code: code,
-      //   },
-      //   success(res) {
-      //     console.log(res.result)
-      //   },
-      //   fail: console.error
-      // })
       if (this.data.n == 0) {
         this.setData({
           warnText: "你已被拉入黑名单，请联系管理员处理。",
         })
-      } else if (code == this.data.inviteCode) {
-        wx.showToast({
-          duration: 1500,
-          title: '验证码正确！',
-          icon: 'success'
-        });
-        this.isPass();
       } else {
-        let n = this.data.n - 1;
-        db.collection('check').where({
-          _openid: _this.data.openid
-        }).update({
+        wx.cloud.callFunction({  //调用云函数，验证邀请码是否正确
+          name: 'check',
           data: {
-            n: n
+            code: code,
           },
-          success: res => {
-            console.log(res);
+          success(res) {
+            console.log(res.result)
+            if (res.result.total == 1) {    //如果邀请码正确
+              wx.showToast({
+                duration: 1500,
+                title: '验证码正确！',
+                icon: 'success'
+              });
+              _this.isPass();  //进入小程序
+              db.collection('check').where({       //标记该用户曾经输入邀请码正确，进入了小程序
+                _openid: _this.data.openid
+              }).update({
+                data: {
+                  passed: true
+                },
+                success: res => {
+                  console.log(res);
+                }
+              })
+            } else {    //如果邀请码错误
+              let n = _this.data.n - 1;
+              db.collection('check').where({       //上传输入邀请码错误次数，如为0则已列入黑名单
+                _openid: _this.data.openid
+              }).update({
+                data: {
+                  n: n
+                },
+              })
+              if (n > 0) {
+                _this.setData({
+                  warnText: "邀请码错误，你还有" + n + "次机会重试！",
+                  n: n,
+                })
+              } else {
+                //拉入黑名单
+                _this.setData({
+                  warnText: "你已被拉入黑名单，请联系管理员处理。",
+                  n: 0,
+                })
+              }
+              fail: console.error
+            }
           }
         })
-        if (n > 0) {
-          this.setData({
-            warnText: "邀请码错误，你还有" + n + "次机会重试！",
-            n: n,
-          })
-        } else {
-          //拉入黑名单
-          this.setData({
-            warnText: "你已被拉入黑名单，请联系管理员处理。",
-            n: 0,
-          })
-        }
-
       }
-
     }
   },
+
 
   isPass: function () {
     wx.switchTab({

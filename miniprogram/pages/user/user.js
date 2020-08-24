@@ -9,11 +9,11 @@ Page({
     takeSession: false,
     requestResult: '',
 
-    isRegistered:false,
-    userinformation:'',
+    isRegistered: false,
+    userinformation: '',
   },
 
-  onLoad: function() {
+  onLoad: function () {
     wx.getSetting({     // 获取用户信息
       success: res => {
         if (res.authSetting['scope.userInfo']) {
@@ -33,8 +33,8 @@ Page({
     if (app.globalData.isRegistered) {
       console.log("再次检查")
       this.setData({
-        isRegistered:app.globalData.isRegistered,
-        userinformation:app.globalData.userInfo
+        isRegistered: app.globalData.isRegistered,
+        userinformation: app.globalData.userInfo
       })
     }
   },
@@ -42,12 +42,12 @@ Page({
   onShow: function () {
     app.isRegistered()
     this.setData({
-      isRegistered:app.globalData.isRegistered,
-      userinformation:app.globalData.userInfo
+      isRegistered: app.globalData.isRegistered,
+      userinformation: app.globalData.userInfo
     })
   },
 
-  onGetUserInfo: function(e) {
+  onGetUserInfo: function (e) {
     if (!this.data.logged && e.detail.userInfo) {
       this.setData({
         logged: true,
@@ -56,28 +56,45 @@ Page({
       })
     }
     wx.redirectTo({
-      url:'../register/register'
+      url: '../register/register'
     })
   },
 
-  register:function(){
+  register: function () {
     wx.redirectTo({
-      url:'../register/register'
+      url: '../register/register'
     })
   },
 
-  personalInfo:function(){
-    wx.navigateTo({
-      url:'../personalInfo/personalInfo',
-    })
+  personalInfo: function () {
+    if (app.globalData.isRegistered) {
+      wx.navigateTo({
+        url: '../personalInfo/personalInfo',
+      })
+    } else {
+      wx.showToast({
+        title: '请先注册！',
+        icon: 'none',
+        duration: 1500
+      })
+    }
+
   },
 
-  myAppointment(){
-    wx.navigateTo({
-      url:'../myAppointment/myAppointment',
-    })
+  myAppointment() {
+    if (app.globalData.isRegistered) {
+      wx.navigateTo({
+        url: '../myAppointment/myAppointment',
+      })
+    } else {
+      wx.showToast({
+        title: '请先注册！',
+        icon: 'none',
+        duration: 1500
+      })
+    }
   },
 
- 
+
 
 })

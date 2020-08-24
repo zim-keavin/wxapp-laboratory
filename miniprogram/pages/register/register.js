@@ -45,7 +45,7 @@ Page({
         success: res => {
           wx.showToast({
             duration: 1500,
-            title: '提交成功',
+            title: '注册成功',
             icon: 'success'
           });
           setTimeout(function() {
@@ -57,7 +57,7 @@ Page({
         },
         fail: err => {
           wx.showToast({
-            title: '提交失败',
+            title: '注册失败',
             icon: 'none',
             duration: 1500
           })

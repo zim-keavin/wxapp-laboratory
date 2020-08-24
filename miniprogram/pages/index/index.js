@@ -28,7 +28,6 @@ Page({
     const _this = this;
     db.collection('appointment').limit(10).orderBy('submissionTime', 'desc').get({
       success: res => {
-        console.log(res)
         _this.setData({
           list: res.data,
         })
